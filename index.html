@@ -155,7 +155,7 @@ async function checkPassword() {
   var hash = await sha256(input);
   if (hash === HASH) {
     sessionStorage.setItem('mc2026_auth', '1');
-    window.location.href = 'trip/viewer.html';
+    window.location.href = 'Trip/viewer.html';
   } else {
     var err = document.getElementById('err');
     err.classList.add('visible');
