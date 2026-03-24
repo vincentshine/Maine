@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maine · Vermont · Montréal — 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --gold:       #2B7A9E;
+  --gold-light: #6AAFCA;
+  --dark:       #0D2B3E;
+  --cream:      #F0F7FA;
+  --border:     #C5DCE8;
+}
+html, body {
+  height: 100%;
+  background: var(--dark);
+  font-family: 'Montserrat', sans-serif;
+  color: var(--cream);
+}
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-image:
+    radial-gradient(ellipse at 70% 80%, rgba(43,122,158,0.35) 0%, transparent 60%),
+    radial-gradient(ellipse at 20% 30%, rgba(26,90,122,0.25) 0%, transparent 55%);
+}
+.login-box {
+  width: 100%;
+  max-width: 420px;
+  padding: 52px 48px 44px;
+  text-align: center;
+}
+.login-label {
+  font-size: 7.5pt;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  margin-bottom: 18px;
+}
+.login-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 36pt;
+  font-weight: 300;
+  line-height: 1.1;
+  margin-bottom: 6px;
+}
+.login-title em {
+  font-style: italic;
+  color: var(--gold-light);
+}
+.login-subtitle {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 13pt;
+  font-weight: 300;
+  color: rgba(240,247,250,0.55);
+  margin-bottom: 40px;
+}
+.login-divider {
+  width: 40px;
+  height: 1px;
+  background: var(--gold);
+  margin: 0 auto 36px;
+}
+.login-form input[type="password"] {
+  width: 100%;
+  padding: 13px 18px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(197,220,232,0.3);
+  color: var(--cream);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10pt;
+  letter-spacing: 3px;
+  text-align: center;
+  outline: none;
+  transition: border-color 0.2s;
+  border-radius: 2px;
+  margin-bottom: 14px;
+}
+.login-form input[type="password"]:focus {
+  border-color: var(--gold);
+}
+.login-form input[type="password"]::placeholder {
+  letter-spacing: 2px;
+  color: rgba(240,247,250,0.3);
+}
+.login-form button {
+  width: 100%;
+  padding: 13px;
+  background: var(--gold);
+  border: none;
+  color: var(--cream);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8pt;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: background 0.2s;
+}
+.login-form button:hover {
+  background: var(--gold-light);
+}
+.login-error {
+  margin-top: 14px;
+  font-size: 8pt;
+  letter-spacing: 1.5px;
+  color: #E07070;
+  min-height: 18px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.login-error.visible {
+  opacity: 1;
+}
+.login-footer {
+  margin-top: 48px;
+  font-size: 7pt;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(240,247,250,0.2);
+}
+</style>
+</head>
+<body>
+<div class="login-box">
+  <div class="login-label">Private Travel Document</div>
+  <div class="login-title">Maine · Vermont · <em>Montréal</em></div>
+  <div class="login-subtitle">May – June 2026</div>
+  <div class="login-divider"></div>
+  <div class="login-form">
+    <input type="password" id="pw" placeholder="Enter passphrase" autocomplete="off" autofocus>
+    <button onclick="checkPassword()">Enter</button>
+    <div class="login-error" id="err">Incorrect passphrase — please try again</div>
+  </div>
+  <div class="login-footer">Vincent Shine &amp; Debbie Rez</div>
+</div>
+
+<script>
+var HASH = '31831ae38207c55d431c52aec3899b2321d582366f871c58467e9b94da993d05';
+
+async function sha256(str) {
+  var buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+async function checkPassword() {
+  var input = document.getElementById('pw').value;
+  var hash = await sha256(input);
+  if (hash === HASH) {
+    sessionStorage.setItem('mc2026_auth', '1');
+    window.location.href = 'trip/viewer.html';
+  } else {
+    var err = document.getElementById('err');
+    err.classList.add('visible');
+    document.getElementById('pw').value = '';
+    document.getElementById('pw').focus();
+    setTimeout(function() { err.classList.remove('visible'); }, 3000);
+  }
+}
+
+document.getElementById('pw').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') checkPassword();
+});
+</script>
+</body>
+</html>
